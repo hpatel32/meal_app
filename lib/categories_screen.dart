@@ -9,7 +9,8 @@ class CategoriesScreen extends StatelessWidget {
       padding: EdgeInsets.all(25),
       children: <Widget>[
         for (var i = 0; i < DUMMY_CATEGORIES.length; i++)
-          CategoryItem(DUMMY_CATEGORIES[i].title, DUMMY_CATEGORIES[i].color),
+          CategoryItem(DUMMY_CATEGORIES[i].id, DUMMY_CATEGORIES[i].title,
+              DUMMY_CATEGORIES[i].color),
       ],
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 200,
