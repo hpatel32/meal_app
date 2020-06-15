@@ -25,6 +25,7 @@ class _MyAppState extends State<MyApp> {
     'vegetarina': false,
   };
   List<Meal> availableMeal = DUMMY_MEALS;
+  List<Meal> favMeal = [];
 
   void setFilter(Map<String, bool> passedFilter) {
     setState(() {
@@ -38,6 +39,23 @@ class _MyAppState extends State<MyApp> {
         return true;
       }).toList();
     });
+  }
+
+  void _toggleFavourite(String mealid) {
+    final findIndex = favMeal.indexWhere((element) => element.id == mealid);
+    if (findIndex >= 0) {
+      setState(() {
+        favMeal.removeAt(findIndex);
+      });
+    } else {
+      setState(() {
+        favMeal.add(DUMMY_MEALS.firstWhere((element) => element.id == mealid));
+      });
+    }
+  }
+
+  bool foundFavMeal(String id) {
+    return favMeal.any((element) => element.id == id);
   }
 
   @override
@@ -58,10 +76,11 @@ class _MyAppState extends State<MyApp> {
       ),
       //home: MyHomePage(),
       routes: {
-        '/': (context) => MyHomePage(),
+        '/': (context) => MyHomePage(favMeal),
         CategoryMealScreen.routeName: (context) =>
             CategoryMealScreen(availableMeal),
-        MealDetailScreen.routeName: (context) => MealDetailScreen(),
+        MealDetailScreen.routeName: (context) =>
+            MealDetailScreen(_toggleFavourite, foundFavMeal),
         FilterScreen.routeName: (context) => FilterScreen(filters, setFilter),
       },
     );
@@ -69,6 +88,9 @@ class _MyAppState extends State<MyApp> {
 }
 
 class MyHomePage extends StatefulWidget {
+  final List<Meal> favMeal;
+
+  MyHomePage(this.favMeal);
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -77,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: TabBarScreen(),
+      body: TabBarScreen(widget.favMeal),
     );
   }
 }
